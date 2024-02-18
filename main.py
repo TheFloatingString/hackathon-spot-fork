@@ -29,7 +29,7 @@ def main():
     # and to return lease + sit down at the end
     with SpotController(username=SPOT_USERNAME, password=SPOT_PASSWORD, robot_ip=ROBOT_IP) as spot:
 
-        for i in range(10):
+        for i in range(200):
             resp = requests.get("https://spot-rest-api.vercel.app/api/spot")
             command = resp.json()["message"]
             if command == "rest":
