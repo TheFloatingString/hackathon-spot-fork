@@ -7,6 +7,11 @@ ROBOT_IP = "10.0.0.3"#os.environ['ROBOT_IP']
 SPOT_USERNAME = "admin"#os.environ['SPOT_USERNAME']
 SPOT_PASSWORD = "2zqa8dgw7lor"#os.environ['SPOT_PASSWORD']
 
+# from supabase import create_client, Client
+
+# url: str = os.environ.get("SUPABASE_URL")
+# key: str = os.environ.get("SUPABASE_KEY")
+# supabase: Client = create_client(url, key)
 
 def main():
     #example of using micro and speakers
@@ -23,7 +28,11 @@ def main():
     camera_capture = cv2.VideoCapture(0)
     rv, image = camera_capture.read()
     print(f"Image Dimensions: {image.shape}")
+    cv2.imwrite("img.png", image)
     camera_capture.release()
+    
+    # with open("img.png", 'rb') as f:
+    #     supabase.storage.from_("testbucket").upload(file=f,path=path_on_supastorage)
 
     # Use wrapper in context manager to lease control, turn on E-Stop, power on the robot and stand up at start
     # and to return lease + sit down at the end
