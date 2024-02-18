@@ -1,6 +1,7 @@
 import os
 import time
 from spot_controller import SpotController
+import requests
 
 ROBOT_IP = "10.0.0.3"#os.environ['ROBOT_IP']
 SPOT_USERNAME = "admin"#os.environ['SPOT_USERNAME']
@@ -28,15 +29,29 @@ def main():
     # and to return lease + sit down at the end
     with SpotController(username=SPOT_USERNAME, password=SPOT_PASSWORD, robot_ip=ROBOT_IP) as spot:
 
-        time.sleep(2)
-        spot.move_to_goal(goal_x=0.5, goal_y=0)
-        time.sleep(1)
-        spot.move_to_goal(goal_x=-0.5,goal_y=0)
-        time.sleep(1)
-        spot.move_by_velocity_control(v_x=0,v_y=0,v_rot=0.3,cmd_duration=5)
-        time.sleep(1)
-        spot.move_by_velocity_control(v_x=0,v_y=0,v_rot=-0.3,cmd_duration=5)
-        time.sleep(1)
+        for i in range(10):
+            resp = requests.get("https://spot-rest-api.vercel.app/api/spot")
+            command = resp.json()["message"]
+            if command == "rest":
+                time.sleep(3)
+            if command == "forward":
+                spot.move_to_goal(goal_x=0.1, goal_y=0)
+            if command == "left":
+                spot.move_by_velocity_control(v_x=0,v_y=0,v_rot=0.3,cmd_duration=5)
+            if command == "right":
+                spot.move_by_velocity_control(v_x=0,v_y=0,v_rot=-0.3,cmd_duration=5)
+            time.sleep(1)
+            
+        
+        # time.sleep(2)
+        # spot.move_to_goal(goal_x=0.5, goal_y=0)
+        # time.sleep(1)
+        # spot.move_to_goal(goal_x=-0.5,goal_y=0)
+        # time.sleep(1)
+        # spot.move_by_velocity_control(v_x=0,v_y=0,v_rot=0.3,cmd_duration=5)
+        # time.sleep(1)
+        # spot.move_by_velocity_control(v_x=0,v_y=0,v_rot=-0.3,cmd_duration=5)
+        # time.sleep(1)
 
         # # Move head to specified positions with intermediate time.sleep
         # spot.move_head_in_points(yaws=[0.2, 0],
